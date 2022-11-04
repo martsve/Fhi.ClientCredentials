@@ -1,0 +1,1 @@
+copy bin\debug\Fhi.ClientCredentialsKeypairs.%1.nupkg c:\nuget
