@@ -36,7 +36,8 @@ If you want to disable the authorization for some reason, you can add another pr
 2. In your `Program.cs` file, or if older `Startup.cs`, add the following section:
 
 ```cs
- services.AddHttpClient(nameof(YourService), c =>
+var clientCredentialsConfiguration = services.RegisterForClientCredentialsKeypairs(Configuration);
+services.AddHttpClient(nameof(YourService), c =>
          {
              c.Timeout = new TimeSpan(0, 0, 0, 10);
              c.BaseAddress = new Uri(clientCredentialsConfiguration.Url);
