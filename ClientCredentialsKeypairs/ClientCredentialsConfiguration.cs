@@ -8,8 +8,22 @@ public partial class ClientCredentialsConfiguration
 
     public string PrivateKey => privateJwk;
 
-    public string Url => url;
+    /// <summary>
+    /// Set this lower than the lifetime of the access token
+    /// </summary>
+    public int RefreshTokenAfterMinutes { get; set; } = 8;
+    public List<Api> Apis { get; set; } = new();
+}
 
-    public int RefreshTokenAfterMinutes { get; set; }
-    public string url { get; set; } = "";
+public class Api
+{
+    /// <summary>
+    /// User friendly name of the Api, prefer using nameof(WhateverApiService)
+    /// </summary>
+    public string Name { get; set; } = "";
+    
+    /// <summary>
+    /// Actual Url to Api
+    /// </summary>
+    public string Url { get; set; } = "";
 }
