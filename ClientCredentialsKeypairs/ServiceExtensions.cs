@@ -5,7 +5,14 @@ namespace Fhi.ClientCredentialsKeypairs
 {
     public static class ServiceExtensions
     {
-        public static ClientCredentialsConfiguration RegisterForClientCredentialsKeypairs(this IServiceCollection services, IConfiguration configuration)
+        [Obsolete("Use AddClientCredentialsKeypairs instead", false)]
+        public static ClientCredentialsConfiguration RegisterForClientCredentialsKeypairs(
+            this IServiceCollection services, IConfiguration configuration)
+        {
+            return services.AddClientCredentialsKeypairs(configuration);
+        }
+
+        public static ClientCredentialsConfiguration AddClientCredentialsKeypairs(this IServiceCollection services, IConfiguration configuration)
         {
             var configClientCredentialsSection = configuration.GetSection(nameof(ClientCredentialsConfiguration));
             var clientCredentialsConfiguration = configClientCredentialsSection.Get<ClientCredentialsConfiguration>();
