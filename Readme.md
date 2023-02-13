@@ -7,20 +7,27 @@
 
 
 ```json
- "ClientCredentialsConfiguration" : {
-    "Authority":"",
-    "ClientId":"",
-    "ClientSecret":"",
-    "Scopes":"",
-    "Apis":[
-     {"Name":"",
-      "Url":"",
-      "Scope":""
+  "ClientCredentialsConfiguration": {
+    "clientName": "",
+    "authority": "",
+    "clientId": "",
+    "grantTypes": [ "client_credentials" ],
+    "scopes": [ ],
+    "secretType": "private_key_jwt:RsaPrivateKeyJwtSecret",
+    "rsaPrivateKey": "",
+    "rsaKeySizeBits": 4096,
+    "privateJwk": "",
+    "Apis": [
+      {
+        "Name": "", // Tip:  Use nameof(YourService)
+        "Url": ""
       }
-    ]
-    }
-
+    ],
+    "refreshTokenAfterMinutes":  8  // Set approx 20% less than lifetime of access token
+  }
 ```
+
+
 
 ## Client Credentials using Keypairs
 
@@ -29,17 +36,17 @@
 2. In your `Program.cs` file, or if older `Startup.cs`, add the following section:
 
 ```cs
-var clientCredentialsConfiguration = services.AddClientCredentialsKeypairs(Configuration);
-services.AddHttpClient(nameof(YourService), c =>
-         {
-             c.Timeout = new TimeSpan(0, 0, 0, 10);
-             c.BaseAddress = new Uri(clientCredentialsConfiguration.Url);
-         })
-         .AddHttpMessageHandler<HttpAuthHandler>()
-         .AddTypedClient(c => RestService.For<IExternalApi>(c, new RefitSettings
-         {
-             ContentSerializer = new SystemTextJsonContentSerializer(options)
-         }));
+    var clientCredentialsConfiguration = services.AddClientCredentialsKeypairs(Configuration);
+    services.AddHttpClient(nameof(YourService), c =>
+    {
+       c.Timeout = new TimeSpan(0, 0, 0, 10);
+       c.BaseAddress = clientCredentialsConfiguration.UriToApiByName(nameof(YourService));
+    })
+    .AddHttpMessageHandler<HttpAuthHandler>()
+    .AddTypedClient(c => RestService.For<IExternalApi>(c, new RefitSettings
+    {
+       ContentSerializer = new SystemTextJsonContentSerializer(services.DefaultJsonSerializationOptions())
+    }));
 ```
 replacing `YourService` with the service you have done for accessing the external api, and replace `IExternalApi` with the Refit interface for whatever external api you want to access.
 

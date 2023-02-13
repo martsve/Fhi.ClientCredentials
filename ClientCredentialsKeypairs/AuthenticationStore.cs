@@ -4,7 +4,7 @@ namespace Fhi.ClientCredentialsKeypairs
 {
     public class AuthenticationStore : IAuthTokenStore
     {
-        readonly IAuthenticationService authenticationService;
+        private readonly IAuthenticationService authenticationService;
         private DateTime tokenDateTime;
         private readonly int refreshTokenAfterMinutes;
 
