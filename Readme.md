@@ -33,7 +33,7 @@
 
 1. Add package 'Fhi.ClientCredentialsKeypairs' to your project
 
-2. In your `Program.cs` file, or if older `Startup.cs`, add the following section:
+2. In your `Program.cs` file, or if older `Startup.cs`, add the following code section (for the outgoing interfaces):
 
 ```cs
     var clientCredentialsConfiguration = services.AddClientCredentialsKeypairs(Configuration);
@@ -50,7 +50,10 @@
 ```
 replacing `YourService` with the service you have done for accessing the external api, and replace `IExternalApi` with the Refit interface for whatever external api you want to access.
 
-If you don't use Refit, you can just skip the last part, and get the named client from the injected HttpFactory in your service. It will still have the authenticatiohandler, so you don't need to do anything more there.
+The `Configuration` property is the injected IConfiguration property from the Startup.cs file.
+
+If you don't use Refit, you can just skip the last part, and get the named client from the injected HttpFactory in your service. It will still have the authenticationhandler, so you don't need to do anything more there to get the bearer token. It will be added automatically.
+
 
 
 
