@@ -13,6 +13,13 @@ public partial class ClientCredentialsConfiguration
     /// </summary>
     public int RefreshTokenAfterMinutes { get; set; } = 8;
     public List<Api> Apis { get; set; } = new();
+
+    public Uri UriToApiByName(string name)
+    {
+        var url = Apis.FirstOrDefault(o => o.Name == name)?.Url ?? throw new InvalidApiNameException(name); ;
+        return new Uri(url);
+    }
+
 }
 
 public class Api
