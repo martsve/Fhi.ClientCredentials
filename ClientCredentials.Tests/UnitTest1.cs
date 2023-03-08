@@ -9,11 +9,11 @@ namespace Fhi.ClientCredentialsUsingSecrets.Tests
         {
             var sut = new ClientCredentialsConfiguration();
             var json =  JsonSerializer.Serialize(sut);
-            TestContext.WriteLine(json);
+            TestContext.Out.WriteLine(json);
             Assert.IsNotNull(json);
             var api = new ApiKonfigurasjon();
             var json2 = JsonSerializer.Serialize(api);
-            TestContext.WriteLine(json2);
+            TestContext.Out.WriteLine(json2);
             Assert.IsNotNull(json2);
         }
     }

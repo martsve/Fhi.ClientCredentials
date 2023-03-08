@@ -11,6 +11,12 @@ The package has a default STS of the NHN HelseId STS.  This can be changed by ov
 
 Include the package in your test project.
 
+```csproj
+<ItemGroup>
+    <PackageReference Include="Fhi.ClientCredentials.TestSupport" Version="1.0.0-beta.1" />
+</ItemGroup>
+```
+
 Add the following test class to your project.  In the base part of the constructor, list the differerent environments you have appsettings for, and for which there exists an `appsettings.XXX.json` file.
 
 ```csharp

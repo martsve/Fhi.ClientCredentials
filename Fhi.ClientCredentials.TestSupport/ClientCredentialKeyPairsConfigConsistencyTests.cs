@@ -9,7 +9,7 @@ public abstract class ClientCredentialKeyPairsConfigConsistencyTests
 
     private readonly SetupBaseConfigTests.AppSettingsUsage useOfAppsettings;
 
-    private readonly ClientCredentialsConfiguration clientCredentialsConfigurationForProduction = null!;
+    private readonly ClientCredentialsConfiguration? clientCredentialsConfigurationForProduction;
 
     /// <summary>
     /// Add the different types of appsettings you have for tests,  e.g. appsettings.test.json => test
@@ -21,24 +21,28 @@ public abstract class ClientCredentialKeyPairsConfigConsistencyTests
 
         foreach (var fileName in fileNamesForTests)
         {
-            var workerConfig = new ClientCredentialsClientIds(fileName, useOfAppsettings).ClientCredentialsConfigurationUnderTest;
+            var workerConfig = new ClientCredentialsClientIds(fileName, useOfAppsettings).ClientCredentialsConfiguration;
             ClientCredentialsConfigurationForTests.Add(workerConfig);
         }
             
         switch (useOfAppsettings)
         {
             case SetupBaseConfigTests.AppSettingsUsage.AppSettingsIsProd:
-                clientCredentialsConfigurationForProduction = new ClientCredentialsClientIds("appsettings.json", useOfAppsettings).ClientCredentialsConfigurationUnderTest;
+                clientCredentialsConfigurationForProduction = new ClientCredentialsClientIds($"appsettings.{prod}.json", useOfAppsettings).ClientCredentialsConfiguration;
+                Assume.That(clientCredentialsConfigurationForProduction, Is.Not.Null, "No production appsettings found");
                 break;
             case SetupBaseConfigTests.AppSettingsUsage.AppSettingsIsExplicit:
             case SetupBaseConfigTests.AppSettingsUsage.AppSettingsIsTestWhenDev:
                 break;
             case SetupBaseConfigTests.AppSettingsUsage.AppSettingsIsBaseOnly:
-                clientCredentialsConfigurationForProduction = new ClientCredentialsClientIds($"appsettings.{prod}.json", useOfAppsettings).ClientCredentialsConfigurationUnderTest;
+                clientCredentialsConfigurationForProduction = new ClientCredentialsClientIds($"appsettings.{prod}.json", useOfAppsettings).ClientCredentialsConfiguration;
+                Assume.That(clientCredentialsConfigurationForProduction, Is.Not.Null, "No production appsettings found");
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(useOfAppsettings), useOfAppsettings, null);
         }
+
+        
     }
 
     [Test]
@@ -71,7 +75,7 @@ public abstract class ClientCredentialKeyPairsConfigConsistencyTests
             return;
         }
         var clientIds = ClientCredentialsConfigurationForTests.DistinctBy(o => o.ClientId);
-        Assert.That(clientCredentialsConfigurationForProduction.ClientId, Is.Not.EqualTo(clientIds.First()), "ClientId for production is equal to clientId used for tests");
+        Assert.That(clientCredentialsConfigurationForProduction!.ClientId, Is.Not.EqualTo(clientIds.First()), "ClientId for production is equal to clientId used for tests");
     }
 
     [Test]
@@ -84,6 +88,6 @@ public abstract class ClientCredentialKeyPairsConfigConsistencyTests
             return;
         }
         var keyPairs = ClientCredentialsConfigurationForTests.DistinctBy(o => o.privateJwk);
-        Assert.That(clientCredentialsConfigurationForProduction.privateJwk, Is.Not.EqualTo(keyPairs.First()), "Private Jwk Key for production is equal to what is used for tests");
+        Assert.That(clientCredentialsConfigurationForProduction!.privateJwk, Is.Not.EqualTo(keyPairs.First()), "Private Jwk Key for production is equal to what is used for tests");
     }
 }

@@ -5,10 +5,10 @@ namespace Fhi.ClientCredentials.TestSupport;
 
 public class ClientCredentialsClientIds : SetupBaseConfigTests
 {
-    public ClientCredentialsConfiguration ClientCredentialsConfigurationUnderTest { get; set; }
+    public ClientCredentialsConfiguration ClientCredentialsConfiguration { get; set; }
     public ClientCredentialsClientIds(string configFile, AppSettingsUsage useOfAppsettings) : base(configFile, useOfAppsettings)
     {
-        ClientCredentialsConfigurationUnderTest = Config.GetSection(nameof(ClientCredentialsConfiguration))
+        ClientCredentialsConfiguration = Config.GetSection(nameof(ClientCredentialsKeypairs.ClientCredentialsConfiguration))
             .Get<ClientCredentialsConfiguration>();
     }
 
