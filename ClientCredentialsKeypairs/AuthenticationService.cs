@@ -3,6 +3,7 @@ using System.Net.Http.Headers;
 using System.Security.Claims;
 using IdentityModel;
 using IdentityModel.Client;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Fhi.ClientCredentialsKeypairs;
@@ -10,24 +11,26 @@ namespace Fhi.ClientCredentialsKeypairs;
 public interface IAuthenticationService
 {
     string AccessToken { get; }
-    Task SetupToken();
+    Task SetupToken(HttpClientHandler? handler=null);
 }
 
 public class AuthenticationService : IAuthenticationService
 {
+    private readonly ILogger<AuthenticationService>? logger;
     public ClientCredentialsConfiguration Config { get; }
 
     
-    public AuthenticationService(ClientCredentialsConfiguration config)
+    public AuthenticationService(ClientCredentialsConfiguration config, ILogger<AuthenticationService>? logger = null)
     {
+        this.logger = logger;
         Config = config;
     }
 
     public string AccessToken { get; private set; } = "";
 
-    public async Task SetupToken()
+    public async Task SetupToken(HttpClientHandler? handler = null)
     {
-        var c = new HttpClient();
+        var c = new HttpClient(handler ?? new HttpClientHandler());
         var cctr = new ClientCredentialsTokenRequest
         {
             Address = Config.Authority,
@@ -42,6 +45,11 @@ public class AuthenticationService : IAuthenticationService
             }
         };
         var response = await c.RequestClientCredentialsTokenAsync(cctr);
+        if (response.IsError)
+        {
+            logger?.LogError("Error getting token: {error}", response.Error);
+            throw new TokenRequestFailedException(response.Error);
+        }
         AccessToken = response.AccessToken;
     }
 

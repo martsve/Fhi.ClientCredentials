@@ -51,3 +51,33 @@ public class ConfigurationException : Exception
     {
     }
 }
+
+[Serializable]
+public class TokenRequestFailedException : Exception
+{
+    //
+    // For guidelines regarding the creation of new exception types, see
+    //    http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cpgenref/html/cpconerrorraisinghandlingguidelines.asp
+    // and
+    //    http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dncscol/html/csharp07192001.asp
+    //
+
+    public TokenRequestFailedException()
+    {
+    }
+
+    public TokenRequestFailedException(string message) : base(message)
+    {
+    }
+
+    public TokenRequestFailedException(string message, Exception inner) : base(message, inner)
+    {
+    }
+
+    protected TokenRequestFailedException(
+        SerializationInfo info,
+        StreamingContext context) : base(info, context)
+    {
+    }
+}
+

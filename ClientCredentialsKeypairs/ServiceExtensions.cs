@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+
 using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json;
 
@@ -6,13 +7,6 @@ namespace Fhi.ClientCredentialsKeypairs
 {
     public static class ServiceExtensions
     {
-        [Obsolete("Use AddClientCredentialsKeypairs instead", false)]
-        public static ClientCredentialsConfiguration RegisterForClientCredentialsKeypairs(
-            this IServiceCollection services, IConfiguration configuration)
-        {
-            return services.AddClientCredentialsKeypairs(configuration);
-        }
-
         /// <summary>
         /// Setup the client credentials keypairs authentication
         /// </summary>
