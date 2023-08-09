@@ -69,18 +69,18 @@ public class AuthenticationService : IAuthenticationService
 
 public interface IAuthTokenStore
 {
-    string GetToken();
+    Task<string> GetToken();
 }
 
 public class AuthenticationStoreDefault : IAuthTokenStore
 {
-    readonly string token;
+    private readonly string token;
 
     public AuthenticationStoreDefault(string token)
     {
         this.token = token;
     }
-    public string GetToken() => token;
+    public Task<string> GetToken() => Task.FromResult(token);
 }
 
 public static class GlobalAuthenticationStore
@@ -93,7 +93,6 @@ public static class GlobalAuthenticationStore
         AuthTokenStore = store;
         AuthenticatedService = authenticatedService;
     }
-
 }
 
 public class AuthHeaderHandler : DelegatingHandler
@@ -108,7 +107,7 @@ public class AuthHeaderHandler : DelegatingHandler
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        var token = authTokenStore.GetToken();
+        var token = await authTokenStore.GetToken();
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
         return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
     }

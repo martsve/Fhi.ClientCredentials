@@ -12,21 +12,21 @@ namespace Fhi.ClientCredentialsKeypairs
         {
             refreshTokenAfterMinutes = configuration.Value.RefreshTokenAfterMinutes;
             this.authenticationService = authenticationService;
-            Refresh();
+            this.tokenDateTime = DateTime.MinValue;
         }
-        public string GetToken()
+
+        public async Task<string> GetToken()
         {
-            if((DateTime.Now - tokenDateTime).TotalMinutes > refreshTokenAfterMinutes)
+            if ((DateTime.Now - tokenDateTime).TotalMinutes > refreshTokenAfterMinutes)
             {
-                Refresh();
+                await Refresh();
             }
             return authenticationService.AccessToken;
         }
 
-        private void Refresh()
+        private async Task Refresh()
         {
-            var x = authenticationService.SetupToken();
-            x.Wait();
+            await authenticationService.SetupToken();
             tokenDateTime = DateTime.Now;
         }
     }

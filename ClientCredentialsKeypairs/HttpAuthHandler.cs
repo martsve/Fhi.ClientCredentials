@@ -4,8 +4,8 @@ namespace Fhi.ClientCredentialsKeypairs
 {
     public class HttpAuthHandler : DelegatingHandler
     {
-
         private readonly IAuthTokenStore _authTokenStore;
+
         public HttpAuthHandler(IAuthTokenStore authTokenStore)
         {
             _authTokenStore = authTokenStore;
@@ -14,11 +14,10 @@ namespace Fhi.ClientCredentialsKeypairs
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
             CancellationToken cancellationToken)
         {
-            string token = _authTokenStore.GetToken();
+            var token = await _authTokenStore.GetToken();
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var response = await base.SendAsync(request, cancellationToken);
             return response;
         }
-
     }
 }
