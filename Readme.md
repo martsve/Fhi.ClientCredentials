@@ -50,6 +50,18 @@
 ```
 replacing `YourService` with the service you have done for accessing the external api, and replace `IExternalApi` with the Refit interface for whatever external api you want to access.
 
+For usages of Refit that uses an interface (in this example `IMyService` is the interface that Refit will implement), the code would look something like this:
+
+```cs
+services
+    .AddRefitClient<IMyService>()
+    .ConfigureHttpClient(c =>
+    {
+        c.BaseAddress = clientCredentialsConfiguration.UriToApiByName(nameof(IMyService));
+    })
+    .AddHttpMessageHandler<HttpAuthHandler>();
+```
+
 The `Configuration` property is the injected IConfiguration property from the Startup.cs file.
 
 If you don't use Refit, you can just skip the last part, and get the named client from the injected HttpFactory in your service. It will still have the authenticationhandler, so you don't need to do anything more there to get the bearer token. It will be added automatically.
