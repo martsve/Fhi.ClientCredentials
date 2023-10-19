@@ -1,7 +1,7 @@
 using System.Text.Json;
 
-namespace Fhi.ClientCredentialsUsingSecrets.Tests
-{
+namespace Fhi.ClientCredentialsUsingSecrets.Tests;
+
     public class Tests
     {
         [Test]
@@ -17,4 +17,3 @@ namespace Fhi.ClientCredentialsUsingSecrets.Tests
             Assert.That(json2, Is.Not.Null);
         }
     }
-}
