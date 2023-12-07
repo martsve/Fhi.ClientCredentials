@@ -42,6 +42,10 @@ public class AuthenticationService : IAuthenticationService
             }
         };
         var response = await c.RequestClientCredentialsTokenAsync(cctr);
+        if (response.IsError)
+        {
+            throw new Exception($"Unable to get access token: {response.Error}");
+        }
         AccessToken = response.AccessToken;
     }
 
